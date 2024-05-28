@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block css %}
+<style>
+    .registration-container {
+        width: 100%;
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        background-color: white;
+        display: flex;          /* Flexbox to layout the form */
+        flex-direction: column; /* Stack the elements vertically */
+        align-items: center;    /* Center the elements horizontally */
+    }
+    
+    .registration-form {
+        display: flex;
+        flex-direction: column;
+        width: 100%;            /* Set the width of the form */
+        text-align: center;
+        justify-content: center;
+    }
+    
+    .registration-form button {
+        margin-top: 10px;      /* Space above the button */
+    }
+    
+    /* Style form elements */
+    .registration-form input, .registration-form label {
+        width: 100%;           /* Full width for input and labels */
+        display: block;        /* Block level elements */
+    }
+    
+    /* Style error messages */
+    strong {
+        color: red;            /* Red color for errors */
+    }
+
+    .register {
+        text-align: center;    /* Center align the title */
+        width: 100%;           /* Full width */
+        margin-bottom: 30px;   /* Space below the title */
+    }
+</style>
+{% endblock %}
+
+{% block title %}
+Kayıt Ol
+{% endblock %}
+
+{% block content %}
+<div class="registration-container">
+    <h1 class="register">Kayıt Ol</h1>
+    <form method="post" class="registration-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Kayıt Ol</button>
+    </form>
+</div>
+{% endblock %}

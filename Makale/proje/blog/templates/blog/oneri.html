@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .recommendation-container {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px; /* Kutucuklar arası boşluk */
+    }
+    .recommendation-box {
+        flex: 1; /* Her kutucuğun esnek şekilde büyümesini sağlar */
+        background: #f0f0f0;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px; /* Kutu köşelerini yuvarlak yapar */
+    }
+    h1, h2 {
+        text-align: center; /* Başlıkları ortalar */
+        margin-bottom: 30px;
+    }
+    ul {
+        list-style-type: none; /* Liste işaretlerini kaldırır */
+        padding: 0;
+    }
+    li {
+        margin-bottom: 10px; /* Listeler arası boşluk */
+    }
+    h2 {
+        background-color: #A9A9A9;
+        border-radius: 8px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .bas {
+        margin-top: 30px;
+    }
+    .link {
+        color: #3d2f2f;
+        font-size: large;
+        text-decoration: none;
+    }
+    .link-box {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .link-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .link-box p {
+        margin: 0;
+    }
+</style>
+
+<div class="container">
+    <h1 class="bas">İlgi Alanlarına Göre Önerilen Makaleler</h1>
+    <div class="recommendation-container">
+        <div class="recommendation-box">
+            <h2>FastText Önerileri</h2>
+            <ul>
+                {% for item in ft_recommended_articles %}
+                <li>
+                    <a href="{% url 'article_detail' id=item.article.id %}" class="link">
+                        <div class="link-box">
+                            <strong>{{ item.article.title }}</strong>
+                            <p>Benzerlik Skoru: {{ item.similarity|floatformat:2 }}</p>
+                        </div>
+                    </a>
+                </li>
+                {% empty %}
+                <li>FastText ile öneri bulunamadı.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="recommendation-box">
+            <h2>SciBERT Önerileri</h2>
+            <ul>
+                {% for item in scibert_recommended_articles %}
+                <li>
+                    <a href="{% url 'article_detail' id=item.article.id %}" class="link">
+                        <div class="link-box">
+                            <strong>{{ item.article.title }}</strong>
+                            <p>Benzerlik Skoru: {{ item.similarity|floatformat:2 }}</p>
+                        </div>
+                    </a>
+                </li>
+                {% empty %}
+                <li>SciBERT ile öneri bulunamadı.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

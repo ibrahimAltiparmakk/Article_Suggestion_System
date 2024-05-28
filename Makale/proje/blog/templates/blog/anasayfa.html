@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
+{% endblock %}
+
+{% block title %}
+Anasayfa
+{% endblock %}
+
+{% block css %}
+<style>
+    .search-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-top: 30px;
+    }
+    
+    .search-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px; /* Buton ve input arasındaki mesafeyi ayarlar */
+    }
+
+    .search-input {
+        flex-grow: 1; /* Input elemanının esnek bir şekilde büyümesini sağlar */
+        padding: 12px 20px;
+        font-size: 16px; /* Font boyutunu artırır */
+        border: 2px solid #007bff; /* Kenarlık rengi ve kalınlığını belirler */
+        border-radius: 5px; /* Kenarlık yuvarlaklığını ayarlar */
+        transition: border-color 0.3s ease; /* Geçiş animasyonunu ayarlar */
+    }
+
+    .search-input:focus {
+        border-color: #0056b3; /* Odaklanma durumunda kenarlık rengini değiştirir */
+        outline: none; /* Varsayılan dış çizgiyi kaldırır */
+    }
+
+    .search-button {
+        padding: 12px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s; /* Animasyonları ayarlar */
+    }
+
+    .search-button:hover, .search-button:focus {
+        background-color: #0056b3; /* Üzerine gelindiğinde ve odaklanıldığında arka plan rengini değiştirir */
+        transform: translateY(-3px); /* Hafifçe yukarı hareket etmesini sağlar */
+    }
+
+    .result-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .result-item {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-top: 10px;
+        padding: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .result-item a {
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+    }
+
+    .result-item:hover {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        transform: translateY(-2px);
+    }
+
+    .baslık{
+        justify-content: center;
+        text-align: center;/*yatay*/
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="search-container">
+    <h1 class="baslık">Anasayfa</h1>
+    <form class="search-form" method="post">
+        {% csrf_token %}
+        <input type="text" name="query" class="search-input" placeholder="Arama yap..." required>
+        <button class="search-button" type="submit">Ara</button>
+    </form>
+    {% if results %}
+    <form method="post" action="{% url 'update_interest_vectors' %}">
+        {% csrf_token %}
+        <ul class="result-list">
+            {% for id, title, keywords in results %}
+            <li class="result-item">
+                <input type="checkbox" name="article_ids" value="{{ id }}">
+                <a href="{% url 'article_detail' id=id %}">{{ title }}</a>
+                <p><small>{{ keywords }}</small></p>
+            </li>
+            {% endfor %}
+        </ul>
+        <button type="submit">İlgi Alanlarını Güncelle</button>
+    </form>
+    
+    {% else %}
+    <p>Arama sonucu bulunamadı.</p>
+    {% endif %}
+</div>
+
+{% endblock %}
